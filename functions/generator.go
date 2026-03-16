@@ -71,6 +71,11 @@ func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
 	var spacePerGap int
 	var extraSpace int
 
+	if alignType != "right" && alignType != "center" && alignType != "left" && alignType != "justify"{
+		fmt.Println("Error : Option should be right, center, left or justify ")
+		os.Exit(1)
+	} 
+
 	switch alignType {
 	case "right":
 		spacesNeeded = termWidth - asciiSize
