@@ -9,20 +9,26 @@ import (
 )
 
 func AsciiArt(inputText, bannerType string) string {
+	// Guard clause for invalid banner type.
+	if bannerType != "standard" && bannerType != "shadow" && bannerType != "thinkertoy" {
+		fmt.Println("Error: Banner must be shadow, standard, or thinkertoy.")
+		os.Exit(0)
+	}
+	// Read and save the content of the bannerfile.
 	bannerFile, err := os.ReadFile("banners/" + bannerType + ".txt")
 	if err != nil {
 		fmt.Println("Error: ", err)
-		return  ""
+		return ""
 	}
-
+	// Saving the ascii characters and words.
 	asciiChar := strings.Split(string(bannerFile), "\n")
 	words := strings.Split(inputText, "\\n")
 	result := ""
-
+	// Error handling for string with  only new line.
 	if strings.ReplaceAll(inputText, "\\n", "") == "" {
-		return  strings.Repeat("\n", len(words)-1)
+		return strings.Repeat("\n", len(words)-1)
 	}
-
+	// Gennerate ascii art for the words.
 	for _, word := range words {
 		if word == "" {
 			result += "\n"
@@ -39,28 +45,29 @@ func AsciiArt(inputText, bannerType string) string {
 		}
 	}
 
-	return  result
+	return result
 }
 
 func TerminalWidth() int {
+	// Use tput colls to get terminal width.
 	cmd := exec.Command("tput", "cols")
 	cmd.Stdin = os.Stdin
 	out, err := cmd.Output()
 	if err != nil {
 		fmt.Print("error: ", err)
-		return  0
+		return 0
 	}
+	// Get the integar value of the terminal width.
 	cols := strings.TrimSpace(string(out))
 	output, err := strconv.Atoi(cols)
 	if err != nil {
 		fmt.Print("error: ", err)
-		return  0
+		return 0
 	}
-	return  output
+	return output
 }
 
 func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
-
 	var result strings.Builder
 
 	art := AsciiArt(inputText, bannerType)
@@ -70,12 +77,12 @@ func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
 	var spacesNeeded int
 	var spacePerGap int
 	var extraSpace int
-
-	if alignType != "right" && alignType != "center" && alignType != "left" && alignType != "justify"{
+	// Guard clause for aligntype.
+	if alignType != "right" && alignType != "center" && alignType != "left" && alignType != "justify" {
 		fmt.Println("Error : Option should be right, center, left or justify ")
-		os.Exit(1)
-	} 
-
+		os.Exit(0)
+	}
+	// Switch statement for alighntypes
 	switch alignType {
 	case "right":
 		spacesNeeded = termWidth - asciiSize
@@ -89,7 +96,7 @@ func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
 		if len(words) == 0 {
 			return result.String()
 		}
-
+		// Returning the default ascii art if there is only 1 word.
 		if len(words) == 1 {
 			art := AsciiArt(words[0], bannerType)
 			result.WriteString(art)
@@ -102,13 +109,13 @@ func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
 			rows := strings.Split(art, "\n")
 			totalWordWidth += len(rows[0])
 		}
-
+		// Calculate the gaps needed between the justified words.
 		gaps := len(words) - 1
 		totalSpaces := termWidth - totalWordWidth
 
 		spacePerGap = totalSpaces / gaps
 		extraSpace = totalSpaces % gaps
-
+		// Print the rows of the ascii art with the space between each word row.
 		for row := 0; row < 8; row++ {
 			currentExtra := extraSpace
 			for i, word := range words {
@@ -129,16 +136,15 @@ func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
 	}
 
 	pad := strings.Repeat(" ", spacesNeeded)
-
+	// Check for empty string between words and replaces with newline, otherwise prints the pad, word and newline at the end.
 	for i, line := range artChar {
 		if line == "" {
-			if i != len(artChar) - 1 {
+			if i != len(artChar)-1 {
 				result.WriteString("\n")
 			}
-		}else{
+		} else {
 			result.WriteString(pad + line + "\n")
 		}
 	}
-	return  result.String()
+	return result.String()
 }
-

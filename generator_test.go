@@ -1,9 +1,10 @@
 package main
 
 import (
-	"ascii-art-justify/functions"
 	"strings"
 	"testing"
+
+	"ascii-art-justify/functions"
 )
 
 const testTermWidth = 80

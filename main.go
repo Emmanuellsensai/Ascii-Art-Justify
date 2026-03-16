@@ -3,20 +3,22 @@ package main
 import (
 	"fmt"
 	"os"
-	"ascii-art-justify/functions"
 	"strings"
+
+	"ascii-art-justify/functions"
 )
 
 func main() {
+	// Error handling to ensure proper length of arguments.
 	if len(os.Args) < 2 || len(os.Args) > 4 {
 		fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\nExample: go run . --align=right something standard")
 		return
 	}
-
+	// Initialization of varfiables with default values for optional params.
 	var inputText string
 	bannerType := "standard"
 	alignType := "left"
-
+	// Assigning variable values based on number of arguments.
 	if len(os.Args) == 2 {
 		inputText = os.Args[1]
 	} else if len(os.Args) == 3 {
@@ -37,14 +39,13 @@ func main() {
 			return
 		}
 	}
-	
+	// Handling empty imput.
 	if inputText == "" {
 		return
 	}
-
+	// Calling functions to get terninal width and print aligned result.
 	termWidth := functions.TerminalWidth()
 
 	result := functions.AlignArt(inputText, bannerType, alignType, termWidth)
 	fmt.Print(result)
 }
-	
