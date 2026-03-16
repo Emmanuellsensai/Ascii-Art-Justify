@@ -1,6 +1,7 @@
-package functions
+package main
 
 import (
+	"ascii-art-justify/functions"
 	"strings"
 	"testing"
 )
@@ -9,8 +10,8 @@ const testTermWidth = 80
 
 // left output should be identical to raw art — no padding added
 func TestAlignArt_Left(t *testing.T) {
-	result := AlignArt("hello", "standard", "left", testTermWidth)
-	raw := AsciiArt("hello", "standard")
+	result := functions.AlignArt("hello", "standard", "left", testTermWidth)
+	raw := functions.AsciiArt("hello", "standard")
 
 	resultRows := strings.Split(result, "\n")
 	rawRows := strings.Split(raw, "\n")
@@ -27,7 +28,7 @@ func TestAlignArt_Left(t *testing.T) {
 
 // every row should be exactly termWidth wide
 func TestAlignArt_Right(t *testing.T) {
-	result := AlignArt("hello", "standard", "right", testTermWidth)
+	result := functions.AlignArt("hello", "standard", "right", testTermWidth)
 
 	for i, row := range strings.Split(result, "\n") {
 		if row == "" {
@@ -41,9 +42,9 @@ func TestAlignArt_Right(t *testing.T) {
 
 // center output should have more leading spaces than left but less than right
 func TestAlignArt_Center(t *testing.T) {
-	leftResult := AlignArt("hello", "standard", "left", testTermWidth)
-	centerResult := AlignArt("hello", "standard", "center", testTermWidth)
-	rightResult := AlignArt("hello", "standard", "right", testTermWidth)
+	leftResult := functions.AlignArt("hello", "standard", "left", testTermWidth)
+	centerResult := functions.AlignArt("hello", "standard", "center", testTermWidth)
+	rightResult := functions.AlignArt("hello", "standard", "right", testTermWidth)
 
 	leftPad := len(strings.Split(leftResult, "\n")[0]) - len(strings.TrimLeft(strings.Split(leftResult, "\n")[0], " "))
 	centerPad := len(strings.Split(centerResult, "\n")[0]) - len(strings.TrimLeft(strings.Split(centerResult, "\n")[0], " "))
@@ -59,7 +60,7 @@ func TestAlignArt_Center(t *testing.T) {
 
 // every row should be exactly termWidth wide
 func TestAlignArt_Justify(t *testing.T) {
-	result := AlignArt("how are you", "standard", "justify", testTermWidth)
+	result := functions.AlignArt("how are you", "standard", "justify", testTermWidth)
 
 	for i, row := range strings.Split(result, "\n") {
 		if row == "" {
@@ -77,7 +78,7 @@ func TestAlignArt_NoneReturnEmpty(t *testing.T) {
 
 	for _, align := range aligns {
 		t.Run(align, func(t *testing.T) {
-			result := AlignArt("hello world", "standard", align, testTermWidth)
+			result := functions.AlignArt("hello world", "standard", align, testTermWidth)
 			if result == "" {
 				t.Errorf("%s: expected output but got empty string", align)
 			}
