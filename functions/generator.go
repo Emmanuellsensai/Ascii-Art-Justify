@@ -113,6 +113,10 @@ func AlignArt(inputText, bannerType, alignType string, termWidth int) string {
 		gaps := len(words) - 1
 		totalSpaces := termWidth - totalWordWidth
 
+		if totalSpaces < 0 {
+ 		   totalSpaces = 0
+		}
+
 		spacePerGap = totalSpaces / gaps
 		extraSpace = totalSpaces % gaps
 		// Print the rows of the ascii art with the space between each word row.
